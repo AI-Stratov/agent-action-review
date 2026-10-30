@@ -63,9 +63,6 @@ const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'action-review-runtime-'
     resolutionFiber = root.plugin(boot.PluginPackages, { resolution });
     await resolutionFiber.await();
     const component = createRequire(path.join(profile, 'package.json'))(manifest.name);
-    const sdkSession = load('@deepseek-ai/dsh-session');
-    const metrics = [];
-    root.provide('loader', { import: async name => name === '@deepseek-ai/dsh-session' ? { ...sdkSession, appendPluginRecord(session, type, data) { metrics.push({ session: session.id, type, data }); return sdkSession.appendPluginRecord(session, type, data); } } : load(name) });
     services.push(root.plugin(SystemPrompt, {}), root.plugin(ToolRuntime, {}), root.plugin(ApprovalService, { policy: 'ask' }), root.plugin(SessionProjectionRegistry, {}));
     await Promise.all(services.map(service => service.await()));
     const sessions = [];
@@ -83,6 +80,9 @@ const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'action-review-runtime-'
     let streamFailure = false;
     const calls = [];
     const approvalCalls = [];
+    const metricsKey = 'runtime-check:metrics';
+    const metrics = () => sessions.flatMap(session => root.sessionProjections.stateOf(session, metricsKey) ?? []);
+    root.sessionProjections.register({ key: metricsKey, stateVersion: 1, stateSchema: z.array(z.any()), init: () => [], apply: (state, event) => event.type.startsWith('plugin:action-review/') ? [...state, { type: event.type, data: event.data, ignorable: event.ignorable === true }] : state });
     const auditKey = 'runtime-check:approval-audit';
     root.sessionProjections.register({ key: auditKey, stateVersion: 1, stateSchema: z.array(z.any()), init: () => [], apply: (state, event) => event.type === 'approval/asked' || event.type === 'approval/decided' ? [...state, { type: event.type, data: event.data }] : state });
     root.provide('llm', { async *stream(options) {
@@ -290,9 +290,9 @@ const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'action-review-runtime-'
     checks.push('hot model update retains old in-flight route, uses next route without restart or permission change');
     fiber.update({ ...fixed, model: 'review-b', metrics: false });
     await tick();
-    const metricsBeforeDisabled = metrics.length;
+    const metricsBeforeDisabled = metrics().length;
     await call();
-    assert.equal(metrics.length, metricsBeforeDisabled);
+    assert.equal(metrics().length, metricsBeforeDisabled);
     fiber.update({ ...fixed, model: 'review-b', metrics: true });
     await tick();
     checks.push('disabled metrics produce no session records');
@@ -368,11 +368,12 @@ const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'action-review-runtime-'
     assert.equal(root.permissionPresets.current(main.session), 'workspace-write');
     checks.push('unload cancels waiting human approval and a late allowed-once cannot execute');
 
-    const serializedMetrics = JSON.stringify(metrics);
-    assert(metrics.some(item => item.type === 'plugin:action-review/start'));
-    assert(metrics.some(item => item.type === 'plugin:action-review/end'));
+    const serializedMetrics = JSON.stringify(metrics());
+    assert(metrics().every(item => item.ignorable), 'SDK metric records must be ignorable session facts.');
+    assert(metrics().some(item => item.type === 'plugin:action-review/start'));
+    assert(metrics().some(item => item.type === 'plugin:action-review/end'));
     for (const secret of ['private-instruction-sentinel', 'private-argument-sentinel', 'Synthetic reviewer result.']) assert(!serializedMetrics.includes(secret));
-    assert(metrics.filter(item => item.type.endsWith('/end')).every(item => Number.isFinite(item.data.elapsedMs)));
+    assert(metrics().filter(item => item.type.endsWith('/end')).every(item => Number.isFinite(item.data.elapsedMs)));
     checks.push('real ignorable session metrics contain timing/outcome but no prompt, arguments or model reason');
 
     console.log(JSON.stringify({ status: 'passed', host: boot.getDshRuntimeVersion(), checks, model_requests: 0, synthetic_model_calls: calls.length, bodies, prompts, applies, disposes, working_profile_changed: false, coverage: 'Built component with real SDK services. PTC checks cover admission/dispatch, not the full evaluator.' }, null, 2));

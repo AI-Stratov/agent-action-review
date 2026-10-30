@@ -1,4 +1,5 @@
 import Schema from '@deepseek-ai/schemastery';
+import { appendPluginRecord } from '@deepseek-ai/dsh-session';
 import { z } from 'zod';
 import { createHash } from 'node:crypto';
 import { createReviewer } from '@agent-action-review/core';
@@ -6,7 +7,7 @@ import { makeBackend } from './backend.js';
 import { buildReviewRequest, createContextProjection } from './context.js';
 
 export const name = 'action-review';
-export const inject = ['loader', 'llm', 'approval', 'permissionPresets', 'sessions', 'tools', 'sessionProjections', 'shell'];
+export const inject = ['llm', 'approval', 'permissionPresets', 'sessions', 'tools', 'sessionProjections', 'shell'];
 export const Config = Schema.object({
   mode: Schema.union(['inherit', 'fixed']).default('inherit').description('Use the agent model or a separate reviewer model.'),
   provider: Schema.string().default('').description('Configured provider id for fixed reviewer routing.'),
@@ -57,7 +58,6 @@ export async function apply(ctx, rawConfig) {
   let accepting = true;
   const lifecycle = new AbortController();
   const active = new Set();
-  const { appendPluginRecord } = await ctx.loader.import('@deepseek-ai/dsh-session');
   const record = (session, type, data) => {
     try { appendPluginRecord(session, type, data); } catch {}
   };

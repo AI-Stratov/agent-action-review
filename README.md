@@ -70,6 +70,8 @@ node scripts/check-runtime.cjs --app '/Applications/DeepSeek Harness.app'
 npm pack --workspace dsh-action-review --pack-destination /absolute/output/path
 node scripts/check-host.cjs --app '/Applications/DeepSeek Harness.app' \
   --tarball /absolute/output/path/dsh-action-review-0.1.0.tgz
+node scripts/check-lifecycle.cjs --app '/Applications/DeepSeek Harness.app' \
+  --tarball /absolute/output/path/dsh-action-review-0.1.0.tgz
 ```
 
 These host checks run Electron as Node against a temporary offline profile.
