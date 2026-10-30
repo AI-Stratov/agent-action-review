@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:agent-action-review:response:1",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "request_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "policy": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "task-authorization"
+            },
+            "version": {
+              "const": "0.1.0"
+            }
+          },
+          "required": [
+            "id",
+            "version"
+          ],
+          "additionalProperties": false
+        },
+        "status": {
+          "const": "result"
+        },
+        "decision": {
+          "enum": [
+            "allow",
+            "ask",
+            "deny"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+          },
+          "uniqueItems": true
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "route": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "provider",
+                "model"
+              ],
+              "additionalProperties": false
+            },
+            "duration_ms": {
+              "type": "number",
+              "minimum": 0
+            },
+            "usage": {
+              "type": "object",
+              "properties": {
+                "input_tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "output_tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "protocol_version",
+        "request_id",
+        "snapshot_id",
+        "policy",
+        "status",
+        "decision",
+        "reason",
+        "authority_refs",
+        "evidence_refs"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "protocol_version": {
+          "const": 1
+        },
+        "request_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "policy": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "const": "task-authorization"
+            },
+            "version": {
+              "const": "0.1.0"
+            }
+          },
+          "required": [
+            "id",
+            "version"
+          ],
+          "additionalProperties": false
+        },
+        "status": {
+          "const": "error"
+        },
+        "code": {
+          "enum": [
+            "invalid_input",
+            "invalid_response",
+            "context_unavailable",
+            "backend_error",
+            "timeout",
+            "cancelled"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "route": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "model": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "provider",
+                "model"
+              ],
+              "additionalProperties": false
+            },
+            "duration_ms": {
+              "type": "number",
+              "minimum": 0
+            },
+            "usage": {
+              "type": "object",
+              "properties": {
+                "input_tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "output_tokens": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [],
+              "additionalProperties": false
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "protocol_version",
+        "status",
+        "code",
+        "message"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "not": {
+                  "const": "invalid_input"
+                }
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "request_id",
+              "snapshot_id",
+              "policy"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "agent-action-review-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm test --workspaces",
+    "check": "npm run check --workspaces",
+    "build": "node scripts/build.mjs",
+    "test:host": "node scripts/check-runtime.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@deepseek-ai/schemastery": "3.18.5",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2",
+    "zod": "4.4.3"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AI-Stratov/dsh-action-review.git"
+  },
+  "homepage": "https://github.com/AI-Stratov/dsh-action-review#readme",
+  "bugs": {
+    "url": "https://github.com/AI-Stratov/dsh-action-review/issues"
+  }
+}

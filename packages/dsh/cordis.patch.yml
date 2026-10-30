@@ -1,0 +1,10 @@
+- insert:
+    - id: action-review
+      name: 'dsh-action-review'
+      config:
+        mode: inherit
+        provider: ''
+        model: ''
+        timeoutMs: 30000
+        contextBytes: 131072
+        metrics: false
