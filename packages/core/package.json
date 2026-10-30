@@ -31,11 +31,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AI-Stratov/dsh-action-review.git",
+    "url": "git+https://github.com/AI-Stratov/agent-action-review.git",
     "directory": "packages/core"
   },
-  "homepage": "https://github.com/AI-Stratov/dsh-action-review#readme",
+  "homepage": "https://github.com/AI-Stratov/agent-action-review#readme",
   "bugs": {
-    "url": "https://github.com/AI-Stratov/dsh-action-review/issues"
+    "url": "https://github.com/AI-Stratov/agent-action-review/issues"
   }
 }

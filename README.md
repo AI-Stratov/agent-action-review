@@ -1,4 +1,4 @@
-# DSH Action Review
+# Agent Action Review
 
 Choose a separate model to authorize an agent's actions without changing the
 model doing the work. The first integration is a DeepSeek Harness Auto component;
@@ -77,5 +77,6 @@ They do not open the UI, change the working profile or make real model requests.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before changing SDK compatibility or
 permission behavior. Bundled dependency licenses are included in the tarball.
 
-The DSH package is `dsh-action-review`. The independent core is included in
-the built plugin; it does not need a separate npm installation.
+The DSH adapter package is `dsh-action-review`; it is distributed as a release
+tarball. npm publication is deferred. The independent core is included in the
+built plugin and does not need a separate installation.

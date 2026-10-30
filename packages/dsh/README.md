@@ -5,8 +5,9 @@ one pending action, then allows it, asks for human approval or denies it.
 The review policy and core belong to this plugin; the official experimental
 Auto Review package is not a runtime dependency.
 
-The npm package is `dsh-action-review`. The independent core is bundled, so
-no additional wrapper or core installation is needed.
+The adapter package is `dsh-action-review`, distributed as a GitHub release
+tarball. npm publication is deferred. The independent core is bundled, so no
+additional wrapper or core installation is needed.
 It contains one Component, `action-review`, inside one installable DSH bundle.
 The core and its dependencies are included in the built artifact; host SDKs are
 provided by DSH rather than bundled as competing service implementations.
@@ -38,15 +39,10 @@ The tarball contains the built component, its bundle patch, documentation and
 third-party license notices. No build step, API key or global dependency install
 is required when loading that tarball in DSH.
 
-Registry installation uses the package name `dsh-action-review@0.1.0`. In
-Desktop, enter that name under **Plugins → Add plugin → Install a third-party
-plugin**. With the CLI:
-
-```sh
-dsh plugin --profile action-review-test add dsh-action-review@0.1.0
-```
-
-The same installer also accepts a downloaded release tarball:
+Download `dsh-action-review-0.1.0.tgz` from the
+[GitHub release](https://github.com/AI-Stratov/agent-action-review/releases/tag/v0.1.0)
+and add the local archive in Desktop under **Plugins → Add plugin → Install a
+third-party plugin**, or use the CLI:
 
 ```sh
 dsh plugin --profile action-review-test add /absolute/path/dsh-action-review-0.1.0.tgz
