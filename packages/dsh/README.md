@@ -14,13 +14,13 @@ provided by DSH rather than bundled as competing service implementations.
 
 ## Compatibility
 
-The declared host version is exactly DSH `0.2.1-rc.3`, Node 22 or later. SDK
+The declared host versions are DSH `0.2.1-rc.3` and `0.2.1-rc.5`, Node 22 or later. SDK
 packages are optional peers because DSH supplies them through its host resolver;
 this does not make the host capabilities optional. The component refuses to
 start when a required service is unavailable. Other DSH versions must be tested
 before changing `engines.dsh`; do not use `allow-version` as a compatibility fix.
 
-The current checks target a single installed SDK version. This is not a claim
+Both declared SDK versions have passed the host, runtime and loader lifecycle checks. This is not a claim
 that future DSH APIs remain compatible, or that model judgment has been evaluated.
 
 ## Build and install
@@ -39,13 +39,13 @@ The tarball contains the built component, its bundle patch, documentation and
 third-party license notices. No build step, API key or global dependency install
 is required when loading that tarball in DSH.
 
-Download `dsh-action-review-0.1.0.tgz` from the
-[GitHub release](https://github.com/AI-Stratov/agent-action-review/releases/tag/v0.1.0)
+Download `dsh-action-review-0.1.1.tgz` from the
+[GitHub release](https://github.com/AI-Stratov/agent-action-review/releases/tag/v0.1.1)
 and add the local archive in Desktop under **Plugins → Add plugin → Install a
 third-party plugin**, or use the CLI:
 
 ```sh
-dsh plugin --profile action-review-test add /absolute/path/dsh-action-review-0.1.0.tgz
+dsh plugin --profile action-review-test add /absolute/path/dsh-action-review-0.1.1.tgz
 ```
 
 This syntax is documented by the [official CLI](https://github.com/deepseek-ai/deepseek-harness/blob/master/apps/cli/README.md): plugin arguments are forwarded to pnpm. The CLI command itself is not shipped by every Desktop installation. With Desktop only, open **Plugins → Add plugin → Install a third-party plugin** and enter the tarball's absolute path in the package field; the user performs this step. The installed UI package documents tarballs and absolute local paths as accepted inputs. No application bundle files need editing.
@@ -53,7 +53,7 @@ This syntax is documented by the [official CLI](https://github.com/deepseek-ai/d
 For an offline, disposable profile check, the repository provides `scripts/check-host.cjs`. It extracts the already built tarball into a task-owned temporary profile, declares that dependency and its `dsh.profile.bundles` entry, then uses the installed host's real profile parser, compatibility admission and module resolver. It does not modify the working profile:
 
 ```sh
-node scripts/check-host.cjs --app "/absolute/path/DeepSeek Harness.app" --tarball /absolute/path/dsh-action-review-0.1.0.tgz
+node scripts/check-host.cjs --app "/absolute/path/DeepSeek Harness.app" --tarball /absolute/path/dsh-action-review-0.1.1.tgz
 ```
 
 This is a headless artifact/host check, not a claim that the Desktop UI or a live model session was exercised. The temporary profile is removed afterwards.

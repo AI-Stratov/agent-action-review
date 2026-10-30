@@ -19,7 +19,7 @@ protected. No MCP servers are started by this plugin.
 ## Install in DeepSeek Harness
 
 Use the [DSH package guide](packages/dsh/README.md) to install the built tarball.
-The tested host is DSH **0.2.1-rc.3** on macOS; other host versions are refused
+The tested hosts are DSH **0.2.1-rc.3** and **0.2.1-rc.5** on macOS; other host versions are refused
 until verified. The official Auto Review component must be disabled before this
 component can own the Auto slot. After loading it, select Auto in the session.
 
@@ -69,9 +69,9 @@ run the separate host checks:
 node scripts/check-runtime.cjs --app '/Applications/DeepSeek Harness.app'
 npm pack --workspace dsh-action-review --pack-destination /absolute/output/path
 node scripts/check-host.cjs --app '/Applications/DeepSeek Harness.app' \
-  --tarball /absolute/output/path/dsh-action-review-0.1.0.tgz
+  --tarball /absolute/output/path/dsh-action-review-0.1.1.tgz
 node scripts/check-lifecycle.cjs --app '/Applications/DeepSeek Harness.app' \
-  --tarball /absolute/output/path/dsh-action-review-0.1.0.tgz
+  --tarball /absolute/output/path/dsh-action-review-0.1.1.tgz
 ```
 
 These host checks run Electron as Node against a temporary offline profile.
